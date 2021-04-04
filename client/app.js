@@ -24,7 +24,10 @@ function sendMessage(event) {
   event.preventDefault();
   if (messageContentInput.value) {
     addMessage(userName, messageContentInput.value);
-    socket.emit("message", { author: userName, content: messageContent });
+    socket.emit("message", {
+      author: userName,
+      content: messageContentInput.value,
+    });
     messageContentInput.value = "";
   } else {
     alert("this field cannot be empty");
