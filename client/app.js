@@ -7,7 +7,10 @@ const messageContentInput = document.getElementById("message-content");
 
 let userName = "";
 
-const login = (event) => {
+const socket = io();
+socket.on("message", ({ author, content }) => addMessage(author, content));
+
+function login(event) {
   event.preventDefault();
   if (userNameInput.value) {
     userName = userNameInput.value;
@@ -16,17 +19,17 @@ const login = (event) => {
   } else {
     alert("this field cannot be empty");
   }
-};
-const sendMessage = (event) => {
+}
+function sendMessage(event) {
   event.preventDefault();
   if (messageContentInput.value) {
     addMessage(userName, messageContentInput.value);
+    socket.emit("message", { author: userName, content: messageContent });
     messageContentInput.value = "";
-    alert("this field cannot be empty");
   } else {
     alert("this field cannot be empty");
   }
-};
+}
 function addMessage(author, content) {
   const message = document.createElement("li");
   message.classList.add("message");
