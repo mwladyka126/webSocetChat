@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
     const userIndex = users.indexOf(user);
     socket.broadcast.emit("userLeft", {
       author: "Chat Bot",
-      content: `${user.login} has left the conversation!`,
+      content: `${user ? user.login : "user"} has left the conversation!`,
     });
     users.splice(userIndex, 1);
   });
