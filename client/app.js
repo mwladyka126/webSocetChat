@@ -17,7 +17,7 @@ function login(event) {
   if (userNameInput.value) {
     userName = userNameInput.value;
     loginForm.classList.remove(".show");
-    messageSection.classList.add(".show");
+    messagesSection.classList.add(".show");
   } else {
     alert("this field cannot be empty");
   }
