@@ -3,6 +3,8 @@ const path = require("path");
 const socket = require("socket.io");
 
 const messages = [];
+const users = [];
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, "/client")));
@@ -17,6 +19,14 @@ const io = socket(server);
 
 io.on("connection", (socket) => {
   console.log("New client! Its id – " + socket.id);
+  socket.on("login", (login) => {
+    console.log("new user logged" + socket.id);
+    users.push({ login, id: socket.id });
+    socket.broadcast.emit("newUser", {
+      author: "Chat Bot",
+      content: `${login} has joined the conversation!`,
+    });
+  });
   socket.on("message", (message) => {
     console.log("Oh, I've got something from " + socket.id);
     messages.push(message);
@@ -24,6 +34,13 @@ io.on("connection", (socket) => {
   });
   socket.on("disconnect", () => {
     console.log("Oh, socket " + socket.id + " has left");
+    const user = users.find((u) => u.id == socket.id);
+    const userIndex = users.indexOf(user);
+    socket.broadcast.emit("userLeft", {
+      author: "Chat Bot",
+      content: `${user.login} has left the conversation!`,
+    });
+    users.splice(userIndex, 1);
   });
   console.log("I've added a listener on message event \n");
 });
